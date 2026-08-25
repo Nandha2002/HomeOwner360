@@ -33,3 +33,6 @@ TestResults/
 
 # Docker
 docker-compose.override.yml
+
+# Database backups
+*.bak

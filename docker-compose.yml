@@ -1,0 +1,56 @@
+services:
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: homeowner360-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${SQL_PASSWORD}"
+    ports:
+      - "1433:1433"
+    volumes:
+      - homeowner360-sql-data:/var/opt/mssql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$${MSSQL_SA_PASSWORD}\" -C -Q \"SELECT 1\""
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  api:
+    image: homeowner360-api:latest
+    container_name: homeowner360-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_HTTP_PORTS: "8080"
+
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=Homeowner360Db;User Id=sa;Password=${SQL_PASSWORD};TrustServerCertificate=True;"
+
+      Jwt__Key: "${JWT_KEY}"
+      Jwt__Issuer: "Homeowner360.Api"
+      Jwt__Audience: "Homeowner360.Client"
+      Jwt__ExpirationMinutes: "60"
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  frontend:
+    image: homeowner360-client:latest
+    container_name: homeowner360-client
+    environment:
+      NEXT_PUBLIC_API_URL: "http://localhost:8080/api"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  homeowner360-sql-data:

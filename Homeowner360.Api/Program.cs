@@ -103,12 +103,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
-
-if (!app.Environment.IsEnvironment("Testing"))
-{
     app.UseHttpsRedirection();
 }
+
 app.UseCors("Frontend");
 
 app.UseAuthentication();

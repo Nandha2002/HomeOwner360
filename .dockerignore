@@ -1,0 +1,31 @@
+# .NET build output
+**/bin/
+**/obj/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.vs/
+.idea/
+
+# Next.js
+**/node_modules/
+**/.next/
+**/out/
+
+# Environment files
+**/.env
+**/.env.*
+
+# OS files
+.DS_Store
+
+# Test output
+**/TestResults/
+
+# Docker
+Dockerfile*
+docker-compose*.yml
