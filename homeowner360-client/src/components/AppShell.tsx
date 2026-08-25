@@ -1,0 +1,1 @@
+import AuthGuard from"@/components/AuthGuard";import Sidebar from"@/components/Sidebar";export default function AppShell({children}:{children:React.ReactNode}){return <AuthGuard><div className="app-shell"><Sidebar/><main className="main-content">{children}</main></div></AuthGuard>}
